@@ -4,11 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#165c4e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="報修登記">
   <title>報修登記</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/png" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
   <link rel="stylesheet" href="./style.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script defer src="./vendor/supabase-2.119.0.js"></script>
   <script defer src="./config.js"></script>
   <script defer src="./app.js"></script>
+  <script defer src="./pwa.js"></script>
 </head>
 <body>
   <header class="hero"><div class="shell"><span class="eyebrow">維護服務 · SERVICE DESK</span><h1>報修登記</h1><p>記錄問題，讓每一件報修都有跡可循。</p></div></header>
@@ -16,6 +23,7 @@
     <section class="panel" aria-labelledby="form-title">
       <div class="section-heading"><div><span class="step">01 / 新增需求</span><h2 id="form-title">需要協助嗎？</h2></div><span class="hint">所有欄位皆為必填</span></div>
       <p class="notice">此為公開示範清單，請使用虛構姓名與地點，勿填寫個人或敏感資訊。</p>
+      <p id="connection-message" class="message error" role="status" aria-live="polite" hidden></p>
       <form id="repair-form">
         <div class="fields">
           <label>報修人<input name="reporter_name" required maxlength="100" autocomplete="off" placeholder="例如：示範同仁"></label>
@@ -40,6 +48,11 @@
       <p id="list-message" role="status" aria-live="polite">正在載入報修紀錄…</p>
       <div id="request-list" class="request-list" aria-busy="true"></div>
     </section>
+    <aside class="pwa-panel" aria-label="安裝與離線使用">
+      <button id="install-button" type="button" class="secondary" hidden>安裝報修登記</button>
+      <details><summary>加入主畫面與離線使用</summary><p>Android 或桌面 Chrome／Edge：使用瀏覽器的「安裝應用程式」選項。iPhone／iPad：在 Safari 點「分享」→「加入主畫面」。可用選項依瀏覽器而異。</p><p>首次連線載入完成後，可離線開啟表單畫面。送出報修與讀取清單需要網路，不會離線排隊或自動補送。填寫內容僅保留於目前頁面，關閉或重新載入會清除。</p></details>
+      <p id="pwa-message" role="status" aria-live="polite" hidden></p>
+    </aside>
   </main>
   <footer class="shell page-footer">報修登記系統 · 讓工作環境更好一點</footer>
 </body>

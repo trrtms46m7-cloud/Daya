@@ -8,10 +8,18 @@
   const list = document.querySelector('#request-list');
   const filters = document.querySelector('#urgency-filters');
   const filterMessage = document.querySelector('#filter-message');
+  const connectionMessage = document.querySelector('#connection-message');
   let requests = [];
   let selectedUrgency = '全部';
   let client;
   let submitting = false;
+
+  function updateConnection() {
+    const offline = !navigator.onLine;
+    submitButton.disabled = offline || submitting || !client;
+    refreshButton.disabled = offline || !client;
+    message(connectionMessage, offline ? '目前離線：可填寫表單，連線後請自行送出；不會自動補送。報修內容不會儲存到裝置，重新載入會清除。' : '', 'error');
+  }
 
   function message(element, text, type = '') {
     element.textContent = text;
@@ -61,6 +69,12 @@
   });
 
   async function loadRequests() {
+    if (!navigator.onLine) {
+      list.setAttribute('aria-busy', 'false');
+      message(listMessage, requests.length ? '目前離線，下方為本頁先前載入的紀錄，可能不是最新。' : '目前離線，連線後才能讀取報修清單。');
+      updateConnection();
+      return;
+    }
     refreshButton.disabled = true;
     list.setAttribute('aria-busy', 'true');
     message(listMessage, '正在載入報修紀錄…');
@@ -75,13 +89,17 @@
     } catch (error) {
       message(listMessage, `無法載入清單，請按「重新整理」重試。${list.children.length ? '下方保留上次載入的紀錄。' : ''} 錯誤：${error.message || '連線失敗'}`, 'error');
     } finally {
-      refreshButton.disabled = false;
+      refreshButton.disabled = !navigator.onLine;
       list.setAttribute('aria-busy', 'false');
     }
   }
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
+    if (!navigator.onLine) {
+      updateConnection();
+      return;
+    }
     if (submitting || !client || !form.reportValidity()) return;
     const values = new FormData(form);
     // Only insert permitted form columns; status, id and created_at use database defaults.
@@ -104,7 +122,7 @@
       message(formMessage, `送出失敗，已保留填寫內容。請確認連線後再試。錯誤：${error.message || '連線失敗'}`, 'error');
     } finally {
       submitting = false;
-      submitButton.disabled = false;
+      submitButton.disabled = !navigator.onLine;
       submitButton.textContent = '送出報修 ↗';
     }
   });
@@ -115,6 +133,15 @@
       auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
     });
     refreshButton.addEventListener('click', loadRequests);
+    window.addEventListener('offline', () => {
+      updateConnection();
+      message(listMessage, requests.length ? '目前離線，下方為本頁先前載入的紀錄，可能不是最新。' : '目前離線，連線後才能讀取報修清單。');
+    });
+    window.addEventListener('online', () => {
+      updateConnection();
+      loadRequests();
+    });
+    updateConnection();
     loadRequests();
   } catch {
     submitButton.disabled = true;
