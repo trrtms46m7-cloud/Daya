@@ -3,3 +3,4 @@
 @media(max-width:600px){.shell{width:calc(100% - 28px)}.hero{padding-top:30px}.panel{padding:22px 18px}.fields{grid-template-columns:1fr;gap:18px}.section-heading{gap:12px}.panel .section-heading{align-items:flex-start;flex-direction:column;gap:0}.form-footer{flex-direction:column;align-items:stretch;gap:14px}.form-footer button{width:100%}.requests-section{padding-top:30px}.request-card{padding:18px}.card-heading{flex-direction:column}.request-meta{flex-direction:column;gap:5px}}
 
 .urgency-filters{display:flex;gap:8px;margin-top:20px}.urgency-filters button{flex:1;max-width:100px;padding-inline:12px}.urgency-filters button[aria-pressed="true"]{background:var(--green);color:#fff;border-color:var(--green)}
+.pwa-panel{margin-top:28px;border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font-size:.85rem}.pwa-panel button{margin-bottom:16px}.pwa-panel summary{cursor:pointer;color:var(--green);padding-block:10px}.pwa-panel p{max-width:70ch}

@@ -3,7 +3,6 @@ const assert=require('node:assert/strict');
 (async()=>{
 const browser=await chromium.launch({executablePath:'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
 const page=await browser.newPage({viewport:{width:390,height:844}});
-await page.route('https://cdn.jsdelivr.net/**',r=>r.fulfill({path:'/tmp/supabase.js',contentType:'application/javascript'}));
 let rows=[],failGet=false,failPost=false,payload,posts=0,gets=0;
 await page.route('https://abuxupiwualbfgkngtkk.supabase.co/**',async r=>{
 const req=r.request();
