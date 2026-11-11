@@ -3,6 +3,8 @@
 
 [報修欄位表與範例資料](文件/報修欄位表.xlsx)
 
+[報修系統操作說明（Word）](文件/報修系統操作說明.docx)
+
 ## 網頁前端
 
 首頁為根目錄 `index.html`，樣式與行為分別在 `style.css`、`app.js`；`config.js` 只有 Supabase 專案網址與公開 publishable key。透過 CDN 載入 supabase-js v2，無須建置。
